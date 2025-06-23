@@ -1,12 +1,9 @@
-"""color_chooser.py
+"""colorchooser.py
 
 Simple Color Chooser App using Tkinter & ttkboostrap
-
-:author:	Sackey Ezekiel Etrue (djoezeke)
-:created:	2025.04.10
 """
 
-import tkinter as tk
+import tkinter
 import ttkbootstrap as tb
 from ttkbootstrap.dialogs.colorchooser import ColorChooserDialog
 

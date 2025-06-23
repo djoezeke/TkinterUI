@@ -1,14 +1,10 @@
-"""combo_boxes.py
+"""comboboxes.py
 
 Comboboxes App using Tkinter & ttkboostrap
-
-:author:	Sackey Ezekiel Etrue (djoezeke)
-:created:	2025.04.11
 """
 
-import tkinter as tk
+import tkinter
 import ttkbootstrap as tb
-from ttkbootstrap.constants import *
 
 app = tb.Window(themename="cosmo")
 app.title("TTK Bootstrap!")
@@ -32,7 +28,7 @@ def reset(event):
 
 
 # create label
-label = tb.Label(app, text="Hello World!", font=(".AppleSystemUIFont", 18))
+label = tb.Label(app, text="Hello World!", font=("Arial", 18))
 label.pack(pady=30)
 
 # create dropdown options

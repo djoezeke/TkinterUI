@@ -1,14 +1,10 @@
 """menubutton.py
 
 Menu Button App using Tkinter & ttkboostrap
-
-:author:	Sackey Ezekiel Etrue (djoezeke)
-:created:	2025.04.09
 """
 
 import tkinter
 import ttkbootstrap as tb
-from ttkbootstrap.constants import *
 
 
 app = tb.Window(themename="cosmo")
@@ -19,7 +15,7 @@ app.geometry("500x350")
 def stuff(x):
     """Callback function for menu item selection."""
     menubutton.config(bootstyle=x)
-    label_1.config(text=f"You selected: {x}")
+    label1.config(text=f"You selected: {x}")
 
 
 # create the menu button
@@ -45,8 +41,8 @@ for x in [
 # Associate menu with menu button
 menubutton["menu"] = menu
 
-label_1 = tb.Label()
-label_1.pack(pady=40)
+label1 = tb.Label()
+label1.pack(pady=40)
 
 if __name__ == "__main__":
     app.mainloop()
