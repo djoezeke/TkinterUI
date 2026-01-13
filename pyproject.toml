@@ -4,4 +4,99 @@ version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
+authors = [{ name = "Sackey Ezekiel Etrue", email = "sackeyetrue@gmail.com" }]
+maintainers = [
+    { name = "Sackey Ezekiel Etrue", email = "sackeyetrue@gmail.com" },
+]
+keywords = ["gui", "library"]
+classifiers = [
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Games/Entertainment",
+    "Topic :: Multimedia :: Graphics",
+    "Topic :: Software Development :: Libraries :: Application Frameworks",
+    "Operating System :: Microsoft :: Windows",
+]
+license = "MIT"
+license-files = ["LICEN[CS]E*"]
 dependencies = []
+
+[project.scripts]
+tkinterui = "tkinterui.__main__:main"
+
+[project.urls]
+Homepage = "https://github.com/djoezeke/tkinterui"
+Documentation = "https://github.com/djoezeke/tkinterui#readme"
+Issues = "https://github.com/djoezeke/tkinterui/issues"
+"Release Notes" = "https://github.com/djoezeke/tkinterui/releases"
+Source = "https://github.com/djoezeke/tkinterui"
+
+[project.optional-dependencies]
+standard = []
+
+[dependency-groups]
+dev = [
+    # We add tkinterui[standard] so `uv sync` considers the extras.
+    "tkinterui[standard]",
+    "ruff",                # format & check
+    "pytest",              # testing
+    "twine",               # check dist
+]
+docs = [
+    "mkdocs==1.6.1",
+    "mkdocs-material==9.6.13",
+    "mkdocstrings-python==1.16.12",
+    "mkdocs-llmstxt==0.2.0",
+]
+
+[tool.uv]
+package = true
+required-version = ">=0.8.6"
+default-groups = ["dev", "docs"]
+
+[tool.uv.build-backend]
+module-name = "tkinterui"
+module-root = ""
+source-include = ["*.md"]
+source-exclude = ["tests/"]
+wheel-exclude = ["*.bin"]
+namespaces = false
+
+# Configure Ruff's linting rules
+[tool.ruff]
+src = ["tkinterui", "examples"]
+fix = true
+show-fixes = true
+output-format = "full"
+line-length = 120               # line length
+
+# Further linting configurations
+[tool.ruff.lint]
+unfixable = ["F841"] # Example: prevent fixing of unused local variables
+select = [
+    "B",  # flake8-bugbear
+    "E",  # pycodestyle error
+    "F",  # pyflakes
+    "I",  # isort
+    "UP", # pyupgrade
+    "W",  # pycodestyle warning
+]
+ignore = [
+    "E501",  # ignore line length errors
+    "UP038", # keep isinstance tuple
+]
+
+[tool.ruff.lint.isort]
+force-single-line = true
+order-by-type = false
+combine-as-imports = true
+
+# Configure Ruff's formatter
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
