@@ -14,6 +14,7 @@ jobs:
     environment:
       # Create this environment in the GitHub repository under Settings -> Environments
       name: pypi_test
+      # name: pypi_test
     permissions:
       id-token: write
       contents: read
