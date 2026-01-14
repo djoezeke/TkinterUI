@@ -10,28 +10,36 @@ jobs:
   pypi:
     name: Publish to PyPI
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.13"]
     # Environment and permissions trusted publishing.
     environment:
       # Create this environment in the GitHub repository under Settings -> Environments
       name: pypi_test
-      # name: pypi_test
     permissions:
       id-token: write
       contents: read
+
     steps:
       - name: Checkout
         uses: actions/checkout@v5
-      - name: Install uv
+
+      - name: Set up Python ${{ matrix.python-version }}
         uses: astral-sh/setup-uv@v6
-      - name: Install Python 3.13
-        run: uv python install 3.13
+        with:
+          python-version: ${{ matrix.python-version }}
+      
       - name: Build 
         run: uv build
       # Check that basic features work and we didn't miss to include crucial files
+      
       - name:  (wheel)
         run: uv run --isolated --no-project --with dist/*.whl tests/*.py examples/*.py
+      
       - name:  (source distribution)
         run: uv run --isolated --no-project --with dist/*.tar.gz tests/*.py examples/*.py
+      
       - name: Publish 
         run: uv publish
         # The part below with testpypi only because it's a demo repo, remove the next two lines for production usage
