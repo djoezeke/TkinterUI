@@ -35,7 +35,7 @@ jobs:
         run: uv run ruff format --check --diff
       
       - name: Ruff Type Checking.
-        run: uv run ruff check --fix xodex tests
+        run: uv run ruff check --fix tkinterui tests examples
 
       - name: Prettier Markdown Fromating
         run: npx prettier --prose-wrap always --check "**/*.md"
