@@ -117,7 +117,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          uv sync --frozen
+          uv sync
 
       - name: Publish documentation 📚 to GitHub Pages
         run: uv run mkdocs gh-deploy --force
