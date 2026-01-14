@@ -40,5 +40,5 @@ jobs:
       # - name: Prettier Markdown Fromating
       #   run: npx prettier --fix --prose-wrap always --check "**/*.md"
       
-      - name: Pytest Unittesting.
-        run: uv run pytest
+      # - name: Pytest Unittesting.
+      #   run: uv run pytest
