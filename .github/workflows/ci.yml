@@ -8,42 +8,43 @@ on:
     branches:
       - main
       - dev
+
   pull_request:
     branches: ["main", "dev"]
 
-# Minimal read permission is enough for CI jobs that don't modify the repo.
+  workflow_dispatch:
+
 permissions:
   contents: read
 
 jobs:
   build:
     name: Test, Lint, Type Check & Format
+
     strategy:
       matrix:
         python-version: ["3.13"]
         os: [ubuntu-latest]
+
     runs-on: ${{ matrix.os }}
 
     steps:
-      # Checkout repository (v5 is the current major version)
       - uses: actions/checkout@v5
 
-      # Use the packaged 'uv' environment setup used by this project.
-      # If you prefer the standard setup-python, replace this with actions/setup-python@v4
       - name: Set up Python ${{ matrix.python-version }}
         uses: astral-sh/setup-uv@v6
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Install development dependencies (uv sync)
-        run: uv sync --frozen || true
+      - name: Install Package dependencies
+        run: |
+          uv sync
 
-      - name: Ruff - format check
+      - name: Ruff Formatting.
         run: uv run ruff format --check --diff
 
-      - name: Ruff - lint & fix
-        run: uv run ruff check --fix tkinterui tests examples || true
+      - name: Ruff Type Checking.
+        run: uv run ruff check --fix tkinterui tests examples
 
-      # Uncomment the test step if you want the CI to run unit tests.
-      # - name: Run tests
-      #   run: uv run pytest
+      - name: Pytest Unittesting.
+        run: uv run --dev pytest

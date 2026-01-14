@@ -6,7 +6,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Publish Release Artifacts
+name: Publish
 
 on:
   release:
@@ -17,10 +17,14 @@ permissions:
 
 jobs:
   release-build:
-    runs-on: ubuntu-latest
+    name: Build Distributions & Documentation.
+
     strategy:
       matrix:
         python-version: ["3.13"]
+        os: [ubuntu-latest]
+
+    runs-on: ${{ matrix.os }}
 
     steps:
       - uses: actions/checkout@v5
@@ -31,14 +35,15 @@ jobs:
           python-version: ${{ matrix.python-version }}
           enable-cache: true
 
-      - name: Install package build dependencies
-        run: uv sync --frozen || true
+      - name: Install Package dependencies
+        run: |
+          uv sync
 
-      - name: Build distributions & docs
+      - name: Build distributions & Docs
         run: |
           uv build
-          uv run twine check dist/* || true
-          uv run mkdocs build || true
+          uv run twine check dist/*
+          uv run mkdocs build
 
       - name: Upload distributions
         uses: actions/upload-artifact@v4
@@ -53,15 +58,19 @@ jobs:
           path: site/
 
   pypi-publish:
-    runs-on: ubuntu-latest
+    name: Publish Distributions.
+
     needs:
       - release-build
+
     permissions:
       id-token: write
 
     environment:
       name: pypi
       url: https://pypi.org/project/tkinterui
+
+    runs-on: ubuntu-latest
 
     steps:
       - name: Retrieve release distributions
@@ -70,23 +79,26 @@ jobs:
           name: release-dists
           path: dist/
 
-      - name: Publish to PyPI
-        # pypa/gh-action-pypi-publish remains the recommended action for PyPI
+      - name: Publish distribution 📦 to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           packages-dir: dist/
 
   docs-publish:
-    runs-on: ubuntu-latest
+    name: Publish Documentation to GitHub Pages.
+
     needs:
       - release-build
+
     permissions:
       contents: write
+
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v5
 
-      - name: Download built docs
+      - name: Download Built Docs.
         uses: actions/download-artifact@v4
         with:
           name: documentation
@@ -97,16 +109,9 @@ jobs:
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
 
-      - name: Deploy to GitHub Pages
-        # Using the official gh-pages deploy via CLI or mkdocs. Keep it simple here.
-        run: |
-          if [ -d site ]; then
-            git switch --create gh-pages || git switch gh-pages || true
-            rm -rf ./* || true
-            cp -r site/* .
-            git add --all
-            git commit -m "docs: update site from release" || true
-            git push origin gh-pages --force || true
-          else
-            echo "No site/ to publish"
-          fi
+      - name: Publish documentation 📚 to GitHub Pages
+        run: uv run mkdocs gh-deploy --force
+        env:
+          # This token is automatically provided by GitHub Actions
+          # and has the necessary permissions to push to gh-pages.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
