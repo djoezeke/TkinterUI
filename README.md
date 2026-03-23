@@ -29,10 +29,12 @@
  
 ## 📍 Overview
 
-tkinterui is a collection of huge number of widgets.
+tkinterui is collection of huge number of widgets.
 
 > [!NOTE]
 > Widgets are compatible with both TKinter and CustomTKinter.
+
+### Links
 
 **Documentation**: <a href="https://github.io/djoezeke/tkinterui" target="_blank">https://github.io/djoezeke/tkinterui</a>
 
