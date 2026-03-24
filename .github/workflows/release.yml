@@ -2,16 +2,22 @@ name: Release
 
 on:
   push:
+    # Sequence of patterns matched against refs/tags
     tags:
-      - "v*"
+      # Publish on any tag starting with a `v`, e.g., v1.0.0
+      - "v*" # Push events to matching v*, i.e. v1.0.0
+
+    # branches: "release/**"
 
 jobs:
   release-build:
     name: Build Distributions
+
     strategy:
       matrix:
         python-version: ["3.13"]
         os: [ubuntu-latest]
+
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -23,8 +29,9 @@ jobs:
           python-version: ${{ matrix.python-version }}
           enable-cache: true
 
-      - name: Install package dependencies
-        run: uv sync || true
+      - name: Install Package dependencies
+        run: |
+          uv sync
 
       - name: Build distributions
         run: |
@@ -39,11 +46,15 @@ jobs:
 
   release:
     name: Create Release
+
     needs:
       - release-build
+
     permissions:
       id-token: write
       contents: write
+      attestations: write
+
     runs-on: ubuntu-latest
 
     steps:
@@ -56,11 +67,23 @@ jobs:
           name: dist
           path: dist/
 
-      - name: Compute release version
+      - name: Get Release Version
         id: version
-        run: echo "VER=${GITHUB_REF_NAME#refs/tags/}" >> $GITHUB_OUTPUT
+        run: echo "VER=${GITHUB_REF_NAME#'refs/tags/'}" >> $GITHUB_OUTPUT
 
-      - name: Create GitHub Release (optional)
-        # softprops/action-gh-release can create a release from a tag. Uncomment if you need it.
-        run: |
-          echo "Release would be created here for ${{ steps.version.outputs.VER }}"
+      - name: Generate Release Attestation
+        uses: actions/attest-build-provenance@v3.0.0
+        with:
+          subject-path: "dist/*"
+
+      - name: Create Tag Release
+        uses: softprops/action-gh-release@v2
+        if: github.ref_type == 'tag'
+        with:
+          name: TKinterUI ${{ steps.version.outputs.VER }} release
+          tag_name: ${{ contains(steps.version.outputs.VER, 'dev') }}
+          prerelease: ${{ contains(steps.version.outputs.VER, 'dev') }}
+          # target_commitish: ${{ github.ref_name }}
+          generate_release_notes: true
+          # draft: true
+          files: dist/*

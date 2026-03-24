@@ -1,0 +1,14 @@
+blank_issues_enabled: false
+
+contact_links:
+  - name: TKinterUI Widgets 🪰
+    url: https://github.com/djoezeke/tkinterui
+    about: Modern Widgets for TKinter.
+
+  - name: TKinterUI Issues 🐞
+    url: https://github.com/djoezeke/tkinterui/issues
+    about: Please report issues and vulnerabilities here.
+
+  - name: TKinterUI Releases 💖
+    url: https://github.com/djoezeke/tkinterui/releases
+    about: Please latest TKinterUI release here.
